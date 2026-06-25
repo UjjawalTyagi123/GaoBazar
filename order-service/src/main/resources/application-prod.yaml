@@ -22,7 +22,7 @@ server:
   port: ${PORT:8080}
 
 jwt:
-  secret: your-super-secret-key-123456789
+  secret: heldo-gaobazar-jwt-secret-key-2026-production
   expiration: 86400000
 
 logging:
