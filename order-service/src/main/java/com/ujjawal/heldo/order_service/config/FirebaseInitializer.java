@@ -4,11 +4,17 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import jakarta.annotation.PostConstruct;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class FirebaseInitializer {
+
+    @Value("${FIREBASE_SERVICE_ACCOUNT}")
+    private String firebaseConfig;
 
     @PostConstruct
     public void initialize() {
@@ -19,9 +25,13 @@ public class FirebaseInitializer {
                     FirebaseOptions.builder()
                             .setCredentials(
                                     GoogleCredentials.fromStream(
-                                            new ClassPathResource(
-                                                    "firebase-service-account.json")
-                                                    .getInputStream()))
+                                            new ByteArrayInputStream(
+                                                    firebaseConfig.getBytes(
+                                                            StandardCharsets.UTF_8
+                                                    )
+                                            )
+                                    )
+                            )
                             .build();
 
             if (FirebaseApp.getApps().isEmpty()) {
