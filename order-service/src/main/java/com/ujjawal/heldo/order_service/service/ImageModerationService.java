@@ -92,7 +92,7 @@ public class ImageModerationService {
         }
         catch (Exception e) {
             throw new RuntimeException(
-                    "Unable to verify image."
+                    "Unable to verify image." +  e.getMessage()
             );
         }
     }
