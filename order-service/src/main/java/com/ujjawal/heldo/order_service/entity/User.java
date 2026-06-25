@@ -18,14 +18,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique=true, nullable=false)
+    private String firebaseUid;
+
     private String phoneNumber;
 
-    private String name;
-
-    private Boolean active = true;
-
     private LocalDateTime createdAt;
-
-    private LocalDateTime lastLoginAt;
 }
