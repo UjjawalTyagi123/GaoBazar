@@ -1,6 +1,7 @@
 package com.ujjawal.heldo.order_service.controller;
 
 import com.ujjawal.heldo.order_service.entity.Item;
+import com.ujjawal.heldo.order_service.exception.InappropriateImageException;
 import com.ujjawal.heldo.order_service.service.ItemService;
 import com.ujjawal.heldo.order_service.service.RateLimiterService;
 import org.slf4j.Logger;
@@ -30,18 +31,25 @@ public class ItemController {
     public ResponseEntity<?> postItem(
             @RequestHeader("X-Device-Id") String deviceId,
             @RequestBody Item item) {
+       try{
+           log.info("POST /items called | deviceId={} | villageId={}",
+                   deviceId, item.getVillageId());
 
-        log.info("POST /items called | deviceId={} | villageId={}",
-                deviceId, item.getVillageId());
+           rateLimiterService.validatePost(deviceId);
 
-        rateLimiterService.validatePost(deviceId);
+           Item saved = itemService.save(item);
 
-        Item saved = itemService.save(item);
+           log.info("Item saved successfully | itemId={} | deviceId={}",
+                   saved.getId(), deviceId);
 
-        log.info("Item saved successfully | itemId={} | deviceId={}",
-                saved.getId(), deviceId);
+           return ResponseEntity.ok(saved);
+       }
+       catch (InappropriateImageException ex) {
 
-        return ResponseEntity.ok(saved);
+           return ResponseEntity.badRequest()
+                   .body(ex.getMessage());
+
+       }
     }
 
     @GetMapping

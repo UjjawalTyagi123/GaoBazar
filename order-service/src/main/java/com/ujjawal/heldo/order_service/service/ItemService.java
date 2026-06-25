@@ -15,15 +15,19 @@ public class ItemService {
             LoggerFactory.getLogger(ItemService.class);
 
     private final ItemRepository repository;
+    private final ImageModerationService moderationService;
 
-    public ItemService(ItemRepository repository) {
+    public ItemService(ItemRepository repository,ImageModerationService moderationService) {
         this.repository = repository;
+        this.moderationService = moderationService;
     }
 
     public Item save(Item item) {
         log.info("Saving item | villageId={} | title={}",
                 item.getVillageId(), item.getTitle());
-
+        moderationService.validate(
+                item.getImageUrl()
+        );
         return repository.save(item);
     }
 
