@@ -67,7 +67,7 @@ public class ImageModerationService {
                 SafeSearchAnnotation safe =
                         response.getResponses(0)
                                 .getSafeSearchAnnotation();
-
+                    log.info("safe seach value:{}",safe);
                 if (safe.getAdultValue() >= Likelihood.LIKELY_VALUE) {
                     throw new InappropriateImageException(
                             "Adult content is not allowed."
