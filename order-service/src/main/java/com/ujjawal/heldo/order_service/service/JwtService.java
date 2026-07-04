@@ -1,10 +1,12 @@
 package com.ujjawal.heldo.order_service.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
@@ -17,10 +19,11 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    public String generateToken(Long userId) {
+    private SecretKey getKey() {
+        return Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
-        SecretKey key =
-                Keys.hmacShaKeyFor(secret.getBytes());
+    public String generateToken(Long userId) {
 
         return Jwts.builder()
                 .subject(userId.toString())
@@ -29,7 +32,21 @@ public class JwtService {
                         new Date(
                                 System.currentTimeMillis()
                                         + expiration))
-                .signWith(key)
+                .signWith(getKey())
                 .compact();
+    }
+
+    public Long extractUserId(String token) {
+
+        JwtParser parser =
+                Jwts.parser()
+                        .verifyWith(getKey())
+                        .build();
+
+        Claims claims =
+                parser.parseSignedClaims(token)
+                        .getPayload();
+
+        return Long.parseLong(claims.getSubject());
     }
 }

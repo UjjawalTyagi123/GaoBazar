@@ -9,5 +9,10 @@ public interface UserRepository
         extends JpaRepository<User, Long> {
 
     Optional<User> findByFirebaseUid(
-            String firebaseUid);
+            String firebaseUid
+    );
+
+    Optional<User> findByPhoneNumber(
+            String phoneNumber
+    );
 }

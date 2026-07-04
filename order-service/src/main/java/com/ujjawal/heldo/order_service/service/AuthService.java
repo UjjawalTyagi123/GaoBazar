@@ -1,13 +1,20 @@
 package com.ujjawal.heldo.order_service.service;
 
 
+import java.time.LocalDateTime;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
+
 import com.ujjawal.heldo.order_service.dto.AuthResponse;
 import com.ujjawal.heldo.order_service.dto.FirebaseLoginRequest;
+
 import com.ujjawal.heldo.order_service.entity.User;
+
 import com.ujjawal.heldo.order_service.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,37 +32,55 @@ public class AuthService {
 
         FirebaseToken decodedToken =
                 FirebaseAuth.getInstance()
-                        .verifyIdToken(request.getFirebaseToken());
+                        .verifyIdToken(
+                                request.getFirebaseToken());
 
-        String uid = decodedToken.getUid();
+        String uid =
+                decodedToken.getUid();
 
         String phone =
-                (String) decodedToken.getClaims()
+                (String) decodedToken
+                        .getClaims()
                         .get("phone_number");
 
         User user =
                 userRepository
                         .findByFirebaseUid(uid)
-                        .orElseGet(() -> {
+                        .orElse(null);
 
-                            User u =
-                                    User.builder()
-                                            .firebaseUid(uid)
-                                            .phoneNumber(phone)
-                                            .createdAt(
-                                                    LocalDateTime.now())
-                                            .build();
+        boolean isNewUser = false;
 
-                            return userRepository.save(u);
-                        });
+        if (user == null) {
+
+            isNewUser = true;
+
+            user =
+                    User.builder()
+                            .firebaseUid(uid)
+                            .phoneNumber(phone)
+                            .profileCompleted(false)
+                            .createdAt(LocalDateTime.now())
+                            .build();
+
+            user =
+                    userRepository.save(user);
+        }
 
         String jwt =
                 jwtService.generateToken(
                         user.getId());
 
-        return new AuthResponse(
-                jwt,
-                user.getId(),
-                user.getPhoneNumber());
+        return AuthResponse.builder()
+                .token(jwt)
+                .userId(user.getId())
+                .phoneNumber(user.getPhoneNumber())
+                .newUser(isNewUser)
+                .profileCompleted(
+                        Boolean.TRUE.equals(
+                                user.getProfileCompleted()))
+                .name(user.getName())
+                .profilePhoto(
+                        user.getProfilePhoto())
+                .build();
     }
 }

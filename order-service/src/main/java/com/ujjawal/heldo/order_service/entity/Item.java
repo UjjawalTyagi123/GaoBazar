@@ -1,5 +1,6 @@
 package com.ujjawal.heldo.order_service.entity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,12 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "user_id", nullable =false)
+    private Long userId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ItemStatus status = ItemStatus.ACTIVE;
     private String title;
     private String description;
     private Double price;
