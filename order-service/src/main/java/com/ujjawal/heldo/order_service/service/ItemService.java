@@ -46,7 +46,9 @@ public class ItemService {
      */
     public Page<Item> getByVillage(
             Long villageId,
+            Long districtId,
             String category,
+            String scope,
             int page,
             int size) {
 
@@ -55,13 +57,24 @@ public class ItemService {
                 villageId,
                 page,
                 size);
+        if ("VILLAGE".equals(scope)) {
+            // query by villageId
+            return repository.findByVillageIdAndCategoryAndStatus(
+                    villageId,
+                    category,
+                    ItemStatus.ACTIVE,
+                    PageRequest.of(page, size)
+            );
+        } else {
+            // query by districtId
+            return repository.findByDistrictIdAndCategoryAndStatus(
+                    districtId,
+                    category,
+                    ItemStatus.ACTIVE,
+                    PageRequest.of(page, size)
+            );
+        }
 
-        return repository.findByVillageIdAndCategoryAndStatus(
-                villageId,
-                category,
-                ItemStatus.ACTIVE,
-                PageRequest.of(page, size)
-        );
     }
 
     /**

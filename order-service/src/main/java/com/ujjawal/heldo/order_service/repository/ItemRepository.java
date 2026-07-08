@@ -16,6 +16,13 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             ItemStatus status,
             Pageable pageable
     );
+    Page<Item> findByDistrictIdAndCategoryAndStatus(
+            Long districtId,
+            String category,
+            ItemStatus status,
+            Pageable pageable
+    );
+
 
     Optional<Item> findByIdAndUserId(
             Long itemId,

@@ -32,7 +32,7 @@ public class Item {
     private String districtStr;
     private String stateStr;
     private Long villageId;
-
+    private Long districtId;
     private LocalDateTime createdAt;
 
     @PrePersist

@@ -80,10 +80,11 @@ public class ItemController {
 
             @RequestParam
             Long villageId,
-
+            @RequestParam
+            Long districtId,
             @RequestParam
             String category,
-
+            @RequestParam String scope,
             @RequestParam(defaultValue = "0")
             int page,
 
@@ -100,7 +101,9 @@ public class ItemController {
         Page<Item> result =
                 itemService.getByVillage(
                         villageId,
+                        districtId,
                         category,
+                        scope,
                         page,
                         size);
 
