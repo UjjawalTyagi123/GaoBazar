@@ -181,4 +181,18 @@ public class ItemController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/view")
+    public void registerView(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String authorization
+    ){
+        Long userId =
+                jwtService.extractUserId(
+                        authorization.replace("Bearer ", ""));
+        itemService.registerView(
+                id,
+                userId
+        );
+    }
+
 }

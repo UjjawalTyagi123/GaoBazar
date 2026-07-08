@@ -3,7 +3,9 @@ package com.ujjawal.heldo.order_service.service;
 import com.ujjawal.heldo.order_service.dto.MyItemResponse;
 import com.ujjawal.heldo.order_service.entity.Item;
 import com.ujjawal.heldo.order_service.entity.ItemStatus;
+import com.ujjawal.heldo.order_service.entity.ItemView;
 import com.ujjawal.heldo.order_service.repository.ItemRepository;
+import com.ujjawal.heldo.order_service.repository.ItemViewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -11,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +24,7 @@ public class ItemService {
             LoggerFactory.getLogger(ItemService.class);
 
     private final ItemRepository repository;
+    private final ItemViewRepository itemViewRepository;
     private final ImageModerationService moderationService;
 
     /**
@@ -96,6 +101,7 @@ public class ItemService {
                         .title(item.getTitle())
                         .imageUrl(item.getImageUrl())
                         .category(item.getCategory())
+                        .viewCount(item.getViewCount())
                         .price(item.getPrice())
                         .status(item.getStatus())
                         .createdAt(item.getCreatedAt())
@@ -148,5 +154,40 @@ public class ItemService {
                 "Item marked SOLD | userId={} | itemId={}",
                 userId,
                 itemId);
+    }
+
+    @Transactional
+    public void registerView(
+            Long itemId,
+            Long viewerId
+    ) {
+
+        Item item = repository.findById(itemId)
+                .orElseThrow();
+
+        // Don't count owner's own views
+        if(item.getUserId().equals(viewerId)){
+            return;
+        }
+
+        boolean alreadyViewed =
+                itemViewRepository.existsByItemIdAndUserId(
+                        itemId,
+                        viewerId
+                );
+
+        if(alreadyViewed){
+            return;
+        }
+
+        itemViewRepository.save(
+                ItemView.builder()
+                        .itemId(itemId)
+                        .userId(viewerId)
+                        .viewedAt(LocalDateTime.now())
+                        .build()
+        );
+
+        repository.incrementViewCount(itemId);
     }
 }

@@ -33,6 +33,8 @@ public class Item {
     private String stateStr;
     private Long villageId;
     private Long districtId;
+    @Column(nullable = false)
+    private Long viewCount = 0L;
     private LocalDateTime createdAt;
 
     @PrePersist

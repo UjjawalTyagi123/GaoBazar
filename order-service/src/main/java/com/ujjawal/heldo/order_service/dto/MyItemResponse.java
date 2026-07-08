@@ -23,5 +23,7 @@ public class MyItemResponse {
 
     private ItemStatus status;
 
+    private Long viewCount;
+
     private LocalDateTime createdAt;
 }
