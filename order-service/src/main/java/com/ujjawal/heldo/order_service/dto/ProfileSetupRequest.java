@@ -8,7 +8,7 @@ import lombok.Setter;
 public class ProfileSetupRequest {
 
     private String name;
-
+    private String profileImageUrl;
     private Long stateId;
     private Long districtId;
     private Long villageId;

@@ -29,7 +29,7 @@ public class ProfileService {
         }
 
         user.setName(request.getName());
-
+        user.setProfilePhoto(request.getProfileImageUrl());
         user.setStateId(request.getStateId());
         user.setDistrictId(request.getDistrictId());
         user.setVillageId(request.getVillageId());
