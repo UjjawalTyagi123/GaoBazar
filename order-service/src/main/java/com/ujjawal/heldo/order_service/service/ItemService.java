@@ -59,7 +59,7 @@ public class ItemService {
                 size);
         if ("VILLAGE".equals(scope)) {
             // query by villageId
-            return repository.findByVillageIdAndCategoryAndStatus(
+            return repository.findByVillageIdAndCategoryAndStatusOrderByCreatedAtDesc(
                     villageId,
                     category,
                     ItemStatus.ACTIVE,
@@ -67,7 +67,7 @@ public class ItemService {
             );
         } else {
             // query by districtId
-            return repository.findByDistrictIdAndCategoryAndStatus(
+            return repository.findByDistrictIdAndCategoryAndStatusOrderByCreatedAtDesc(
                     districtId,
                     category,
                     ItemStatus.ACTIVE,

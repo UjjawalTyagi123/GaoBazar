@@ -10,13 +10,13 @@ import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Page<Item> findByVillageIdAndCategoryAndStatus(
+    Page<Item> findByVillageIdAndCategoryAndStatusOrderByCreatedAtDesc(
             Long villageId,
             String category,
             ItemStatus status,
             Pageable pageable
     );
-    Page<Item> findByDistrictIdAndCategoryAndStatus(
+    Page<Item> findByDistrictIdAndCategoryAndStatusOrderByCreatedAtDesc(
             Long districtId,
             String category,
             ItemStatus status,
