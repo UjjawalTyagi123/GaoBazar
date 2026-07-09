@@ -23,7 +23,7 @@ server:
 
 jwt:
   secret: heldo-gaobazar-jwt-secret-key-2026-production
-  expiration: 86400000
+  expiration: 7776000000
 
 logging:
   level:
