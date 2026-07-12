@@ -44,4 +44,46 @@ WHERE i.id = :itemId
 """)
     void incrementViewCount(Long itemId);
 
+
+    @Query("""
+SELECT i
+FROM Item i
+WHERE i.villageId = :villageId
+AND i.category = :category
+AND i.status = :status
+AND (
+LOWER(i.title) LIKE LOWER(CONCAT('%', :search, '%'))
+OR
+LOWER(i.description) LIKE LOWER(CONCAT('%', :search, '%'))
+)
+ORDER BY i.createdAt DESC
+""")
+    Page<Item> searchVillageItems(
+            Long villageId,
+            String category,
+            String search,
+            ItemStatus status,
+            Pageable pageable
+    );
+
+    @Query("""
+SELECT i
+FROM Item i
+WHERE i.districtId = :districtId
+AND i.category = :category
+AND i.status = :status
+AND (
+LOWER(i.title) LIKE LOWER(CONCAT('%', :search, '%'))
+OR
+LOWER(i.description) LIKE LOWER(CONCAT('%', :search, '%'))
+)
+ORDER BY i.createdAt DESC
+""")
+    Page<Item> searchDistrictItems(
+            Long districtId,
+            String category,
+            String search,
+            ItemStatus status,
+            Pageable pageable
+    );
 }

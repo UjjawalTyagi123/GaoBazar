@@ -54,32 +54,66 @@ public class ItemService {
             Long districtId,
             String category,
             String scope,
+            String search,
             int page,
             int size) {
 
         log.info(
-                "Fetching items | villageId={} | page={} | size={}",
+                "Fetching items | scope={} | villageId={} | districtId={} | category={} | search={} | page={} | size={}",
+                scope,
                 villageId,
+                districtId,
+                category,
+                search,
                 page,
                 size);
+
+        boolean hasSearch =
+                search != null &&
+                        !search.trim().isEmpty();
+
         if ("VILLAGE".equals(scope)) {
-            // query by villageId
-            return repository.findByVillageIdAndCategoryAndStatusOrderByCreatedAtDesc(
-                    villageId,
-                    category,
-                    ItemStatus.ACTIVE,
-                    PageRequest.of(page, size)
-            );
-        } else {
-            // query by districtId
-            return repository.findByDistrictIdAndCategoryAndStatusOrderByCreatedAtDesc(
+
+            if (hasSearch) {
+
+                return repository.searchVillageItems(
+                        villageId,
+                        category,
+                        search.trim(),
+                        ItemStatus.ACTIVE,
+                        PageRequest.of(page, size)
+                );
+            }
+
+            return repository
+                    .findByVillageIdAndCategoryAndStatusOrderByCreatedAtDesc(
+                            villageId,
+                            category,
+                            ItemStatus.ACTIVE,
+                            PageRequest.of(page, size)
+                    );
+        }
+
+        // DISTRICT scope
+
+        if (hasSearch) {
+
+            return repository.searchDistrictItems(
                     districtId,
                     category,
+                    search.trim(),
                     ItemStatus.ACTIVE,
                     PageRequest.of(page, size)
             );
         }
 
+        return repository
+                .findByDistrictIdAndCategoryAndStatusOrderByCreatedAtDesc(
+                        districtId,
+                        category,
+                        ItemStatus.ACTIVE,
+                        PageRequest.of(page, size)
+                );
     }
 
     /**

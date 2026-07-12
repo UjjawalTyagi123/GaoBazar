@@ -78,13 +78,14 @@ public class ItemController {
     @GetMapping
     public ResponseEntity<Page<Item>> getItems(
 
-            @RequestParam
-            Long villageId,
-            @RequestParam
-            Long districtId,
-            @RequestParam
-            String category,
+            @RequestParam Long villageId,
+            @RequestParam Long districtId,
+            @RequestParam String category,
             @RequestParam String scope,
+
+            @RequestParam(required = false)
+            String search,
+
             @RequestParam(defaultValue = "0")
             int page,
 
@@ -104,6 +105,7 @@ public class ItemController {
                         districtId,
                         category,
                         scope,
+                        search,
                         page,
                         size);
 
