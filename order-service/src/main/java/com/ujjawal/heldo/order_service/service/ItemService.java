@@ -135,6 +135,7 @@ public class ItemService {
                         .title(item.getTitle())
                         .imageUrl(item.getImageUrl())
                         .category(item.getCategory())
+                        .description(item.getDescription())
                         .viewCount(item.getViewCount())
                         .price(item.getPrice())
                         .status(item.getStatus())

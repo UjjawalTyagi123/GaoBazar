@@ -19,6 +19,8 @@ public class MyItemResponse {
 
     private String category;
 
+    private String description;
+
     private Double price;
 
     private ItemStatus status;
