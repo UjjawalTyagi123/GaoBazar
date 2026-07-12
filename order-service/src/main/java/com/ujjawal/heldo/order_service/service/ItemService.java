@@ -224,4 +224,34 @@ public class ItemService {
 
         repository.incrementViewCount(itemId);
     }
+
+    @Transactional
+    public Item updateItem(
+            Long userId,
+            Long itemId,
+            Item updated
+    ) {
+
+        Item item =
+                repository.findByIdAndUserId(
+                        itemId,
+                        userId
+                ).orElseThrow(
+                        () -> new RuntimeException(
+                                "Item not found"
+                        )
+                );
+
+        item.setTitle(updated.getTitle());
+        item.setDescription(updated.getDescription());
+        item.setPrice(updated.getPrice());
+        item.setPhoneNumber(updated.getPhoneNumber());
+        item.setUserName(updated.getUserName());
+
+        if (updated.getImageUrl() != null) {
+            item.setImageUrl(updated.getImageUrl());
+        }
+
+        return repository.save(item);
+    }
 }

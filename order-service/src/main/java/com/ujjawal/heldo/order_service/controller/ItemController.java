@@ -197,4 +197,23 @@ public class ItemController {
         );
     }
 
+    @PutMapping("/{itemId}")
+    public ResponseEntity<Item> updateItem(
+            @RequestHeader("Authorization") String authorization,
+            @PathVariable Long itemId,
+            @RequestBody Item updatedItem
+    ) {
+        Long userId =
+                jwtService.extractUserId(
+                        authorization.replace("Bearer ", ""));
+
+        return ResponseEntity.ok(
+                itemService.updateItem(
+                        userId,
+                        itemId,
+                        updatedItem
+                )
+        );
+    }
+
 }
